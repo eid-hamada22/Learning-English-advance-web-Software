@@ -1,0 +1,75 @@
+
+.body{
+    background: #eef;
+    transition: all .5s;
+    padding: 1px;
+    min-height: 100vh;
+
+}
+.center{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.mt50{
+    margin-top: 50px;
+}
+.cards_row{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: row-reverse;
+    flex-wrap: wrap;
+    padding: 0 50px;
+}
+.card{
+    width: 270px;
+    height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px 15px;
+    border-radius: 20px;
+}
+.card.pro{
+    opacity: 0.5;
+}
+.img{
+    height: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+p {
+    margin-top: 0;
+    margin-bottom: 0rem !important;
+}
+.dlt_form{
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.dlt_form button{
+    background: none !important; 
+}
+.dlt_form button i{
+    color: #ff2d26;
+    font-size: 2em !important;
+}
+
+.pro_baner {
+    text-align: center;
+    font-size: 1.2em;
+    background: #dc3545;
+    transform: rotate(323deg);
+    color: #fff;
+    /* margin: 10px 5px; */
+    width: 120px;
+    margin-top: 15px;
+    margin-left: -15px;
+    border-radius: 5px;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
