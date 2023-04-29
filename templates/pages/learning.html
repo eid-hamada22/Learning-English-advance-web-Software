@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+
+<link rel="stylesheet" href="{% static 'css/learning.css' %}" />
+
+{% endblock css %}
+
+
+{% block body %}
+
+    <div class="body">
+       <div class="center mt50"> <div class="h2">مجموعاتي</div></div>
+
+
+     
+        <div class="cards_row">
+            <div class="card">
+                <div class="img"><img src="{% static 'img/success.png' %}" width="100px" alt=""></div>
+                <div class="name">الكلمات التي اجتزتها</div>
+                <div class="rate">112</div>
+                <a href="{% url 'pages:passed_words'  %}"><button>مشاهدة</button></a>
+            </div>
+            {% for group in groups_inf %}
+                {% if  group.3   %}
+                    <div class="card">
+                      {% if group.2 %}{% else %}
+                      <form method="post" class="dlt_form">
+                        {% csrf_token %}
+                        <input type="hidden" name="groub" value="{{group.0.id}}">
+                        <button type="submit" name="dlt" title="حذف من مجموعاتي"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                      </form>
+                      {% endif %}
+                        <div class="img"><img src="{{group.0.img.url}}" width="100px" alt=""></div>
+                        <div class="name">{{group.0.ar_name}}</div>
+                        <div class="rate">{{group.2}}/{{group.1}}</div>
+                        <a href="{% url 'pages:word_group' group.0.en_name %}"><button>اكمال التعلم</button></a>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <div class="center mt50"> <div class="h2">كتب</div></div>
+
+
+        <div class="cards_row">
+            {% for group in groups_inf %}
+                {% if  group.3 == 0 and group.0.book   %}
+                  {% if group.0.professional and professional_user == 1  %}
+                        <div class="card">
+                          <div class="pro_baner">احترافي</div>
+                            <div class="img"><img src="{{group.0.img.url}}" width="100px" alt=""></div>
+                            <div class="name">{{group.0.ar_name}}</div>
+                            <div class="rate">{{group.2}}/{{group.1}}</div>
+                            <a href="{% url 'pages:word_group' group.0.en_name %}"><button>بدء التعلم  </button></a>
+                        </div>
+                    {% elif group.0.professional and professional_user == 0  %}
+                    <div class="card pro">
+                      <div class="pro_baner">احترافي</div>
+                        <div class="img"><img src="{{group.0.img.url}}" width="100px" alt=""></div>
+                        <div class="name">{{group.0.ar_name}}</div>
+                        <div class="rate">{{group.2}}/{{group.1}}</div>
+                        <a style="" href="#"><button disabled>اشتراك احترافي </button></a>
+                    </div>
+                    {% else %}
+                        <div class="card">
+                          <div class="img"><img src="{{group.0.img.url}}" width="100px" alt=""></div>
+                          <div class="name">{{group.0.ar_name}}</div>
+                          <div class="rate">{{group.2}}/{{group.1}}</div>
+                          <a href="{% url 'pages:word_group' group.0.en_name %}"><button>بدء التعلم</button></a>
+                        </div>
+                  {% endif %}
+                {% endif %}
+            {% endfor %}
+
+        </div>
+
+        <div class="center mt50"> <div class="h2">مجموعات اخرى</div></div>
+
+
+        <div class="cards_row">
+            {% for group in groups_inf %}
+                {% if  group.3 == 0 and group.0.book == 0   %}
+                {% if group.0.professional and professional_user == 1  %}
+                    <div class="card">
+                      <div class="pro_baner">احترافي</div>
+                        <div class="img"><img src="{{group.0.img.url}}" width="100px" alt=""></div>
+                        <div class="name">{{group.0.ar_name}}</div>
+                        <div class="rate">{{group.2}}/{{group.1}}</div>
+                        <a href="{% url 'pages:word_group' group.0.en_name %}"><button>بدء التعلم  </button></a>
+                    </div>
+                {% elif group.0.professional and professional_user == 0  %}
+                <div class="card pro">
+                  <div class="pro_baner">احترافي</div>
+                    <div class="img"><img src="{{group.0.img.url}}" width="100px" alt=""></div>
+                    <div class="name">{{group.0.ar_name}}</div>
+                    <div class="rate">{{group.2}}/{{group.1}}</div>
+                    <a style="" href="#"><button disabled>اشتراك احترافي </button></a>
+                </div>
+                {% else %}
+                    <div class="card">
+                      <div class="img"><img src="{{group.0.img.url}}" width="100px" alt=""></div>
+                      <div class="name">{{group.0.ar_name}}</div>
+                      <div class="rate">{{group.2}}/{{group.1}}</div>
+                      <a href="{% url 'pages:word_group' group.0.en_name %}"><button>بدء التعلم</button></a>
+                    </div>
+              {% endif %}
+                {% endif %}
+            {% endfor %}
+
+        </div>
+    </div>
+<!-- Button trigger modal -->
+
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">انت بحاجة الى الترقية</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" dir="rtl">
+          <p style="color: #000;">انت بحاجة الى الترقية لفتح هذه المجموعة ومزايا اخرى كثيرا</p>
+          <br>
+          <center><img src="{% static 'img/gift_card.png' %}" width="70%" alt=""></center>
+          <p style="color: #000;">مزايا الترقية :</p>
+          <ul>
+            <li style="color: #000;margin-right: 20px;">انشئ و اختيار مجموعات للكلمات</li>
+            <li style="color: #000;margin-right: 20px;">+50 مجموعة كلمات افتراضية</li>
+            <li style="color: #000;margin-right: 20px;">تشغيل صوتي للكلمات والجمل</li>
+            <li style="color: #000;margin-right: 20px;">حتى 12 اجابة اختر</li>
+            <li style="color: #000;margin-right: 20px;">بدون اعلانات</li>
+            <li style="color: #000;margin-right: 20px;">احصائيات مفصلة</li>
+            <li style="color: #000;margin-right: 20px;">امكانية تغير المعنى</li>
+          </ul>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">اغلاق</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock body %}

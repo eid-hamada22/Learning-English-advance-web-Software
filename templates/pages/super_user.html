@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+
+<link rel="stylesheet" href="{% static 'css/word_group.css' %}" />
+
+{% endblock css %}
+
+{% block body %}
+    <div class="body">
+        <div class="pathup">
+            <div class="path"></div>
+        </div>
+        <div class="card card1" style="margin-top: -350px;">
+            <h2>اضافة كلمة</h2>
+            <div class="words" method="get" style="width: 100%;">
+                <form class="flex-start" method="get">
+                    <div class="word"><input type="text" name="en_word" placeholder="en word" value="{{ request.GET.en_word }}" required></div>
+                    <div class="word"><button type="submit">بحث الجمل</button></div>
+                </form>
+            {% if word_alradey_exist %}
+            <div class="word flex-start redb"><h2>الكلمة موجودة بالفعل | {{ar_word}}</h2></div>
+            {% else %}
+                {% if request.GET.en_word %} 
+                    <form  method="post" style="width: 100%;">
+                        <div class="flex-start">
+                            <div class="word"><input type="text" name="ar_word" placeholder="ar word" value="{{ out }}" required></div>
+
+                            <div class="word">
+                                <select name="groub" id="" multiple >
+                                    <option selected value="{{character_group.id}}">{{character_group.en_name}}</option>
+                                    <option selected value="{{all_group.id}}">{{all_group.en_name}}</option>
+                                    {% for group in groups %}
+                                        <option value="{{group.id}}">{{group.en_name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="flex-start "  style="width: 100%;">
+                            
+                            <div class="" dir="ltr" style="width: 100%;">
+                                {% if sentencees %}   
+                                    {% for sent in sentencees %}
+                                        <div class="word" style="width: 100%;">
+                                            <input style="width: 100%;" required value="{{sent|safe}}" type="text"  id="en_sent" placeholder="en word"></div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                            <div class="" dir="ltr" style="width: 100%;">
+                            {% if ar_sentencees %}   
+                                {% for sent in ar_sentencees %}
+                                    <div class="word"  style="width: 100%;"><input style="width: 100%;"  dir="rtl" value="{{sent|safe}}" id="ar_sent" type="text" required  placeholder="en word"></div>
+
+                                {% endfor %}
+                            {% endif %}
+                            </div>
+                        </div>
+                        {% csrf_token %}
+                        <input type="hidden" name="en_word_get" value="{{ request.GET.en_word }}" required>
+                        <div class="word" style="    justify-content: center;"><button type="submit">تخزين</button></div>
+                    </form>
+                {% endif %}
+            {% endif %}
+            </div>
+        </div>
+
+    </div>
+    <script>
+        en_inputs = document.querySelectorAll('#en_sent');
+        namevalue = 1;
+        [...en_inputs].forEach(element => {
+            element.setAttribute("name", "en_sent"+namevalue)
+
+            namevalue++;
+        })
+
+        ar_inputs = document.querySelectorAll('#ar_sent');
+        namevalue = 1;
+        [...ar_inputs].forEach(element => {
+            element.setAttribute("name", "ar_sent"+namevalue)
+
+            namevalue++;
+        })
+
+        en_sent_radio = document.querySelectorAll('#en_sent_radio');
+        namevalue = 1;
+        [...en_sent_radio].forEach(element => {
+            element.setAttribute("value", "en_sent"+namevalue)
+
+            namevalue++;
+        })
+    </script>
+{% endblock body %}

@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+
+<link rel="stylesheet" href="{% static 'css/word_group.css' %}" />
+
+{% endblock css %}
+
+{% block body %}
+<div class="body">
+    <div class="pathup">
+        <a href="{% url 'pages:word_group' group_ %}" class="up_a" style="margin-top:-30px;">العودة لصفحة المجموعة <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+
+        <div class="path"></div>
+    </div>
+
+    <div  class="card card1" style="margin-top: -350px;">
+       
+        <div class="space-between">
+            {% if answer_right == 1 %} 
+            <h2  class="rightt"><img src="{% static 'img/success.png' %}" class="success_img" /> {{word.en_word}} </h2>
+            {% elif answer_worng == 1%}
+            <h2  class="worngt"><img src="{% static 'img/declined.png' %}" class="success_img" />{{word.en_word}}</h2>
+
+            {% else %}
+            <h2>: {{word.en_word}}</h2>
+
+            {% endif %}
+
+
+
+            {% if answer_right %}     
+                <form method="get" class="space-between word" style="width: 33%;justify-content: center;align-items: center;">
+                    <input onchange="change_checkbox()" type="checkbox" name="checkbox_for_save_word" id="checkbox_right" ><label class="form-check-label-" for="checkbox_right" >تميز كمجتازة</label>
+                    <button type="submit" class="">الانتقال للكلمة التالية</button>
+                </form>
+            {% elif answer_worng %}
+                <a  href="{% url 'pages:word' group_ next_word %}" ><button type="button" class="">الانتقال للكلمة التالية</button></a>
+            {% endif %}
+
+
+
+
+
+            {% with 'audio/'|add:word.en_word|add:'.mp3' as image_static %}
+            
+                <audio src="{% static image_static %}" preload controls></audio>
+            {% endwith %}
+
+        </div>
+        <form method="post" style="width:100%; ">
+            {% csrf_token %}
+            <div class="choices">
+                {% for sent in choices %}
+                    
+
+                    
+                        <div class="choice {% if  answer_worng and answer == sent.id %} answer_worng  {% elif answer_worng and word.id == sent.id %} answer_right {% elif answer_right and answer == sent.id %} answer_right {% endif %}">
+                            <input class="form-check-input" type="radio" required value="{{sent.id}}" name="answer" >
+                            <label class="form-check-label" >
+                                {{sent.ar_word}} 
+                            </label>
+                        </div>
+                        <input type="hidden" class="hidnwords" value="{{sent.id}}" >
+                    
+                {% endfor %}
+            </div>
+            <ul class="sentences">
+                {% for sent in word.sentences.all %}
+                    <li class="sent">
+                        <div class="lng_sent">
+                            <div class="en_sent">{{sent.en_sentence}}</div>
+                            <div class="ar_sent">{{sent.ar_sentence}}</div>
+                        </div>
+                    <div class="audio_sents">
+                        {% with 'audio/sentences/'|add:sent.audio_dir|add:'.mp3' as image_static %}
+                        {% if professional_user == 1 %}
+                            <audio src="{% static image_static %}"   preload controls></audio>
+                        {% else %}
+                            <audio src="{% static image_static_no %}" class="sent_audio"  preload controls></audio>
+                        {% endif %}
+
+                    {% endwith %}
+                    </div>
+                </li>
+            {% endfor %}
+            </ul>
+            <br>
+            <div class="center"><h6>اصوات الجمل متوفرة للاشتراك الاحترافي فقط</h6></div>
+
+            <div class="center">
+                <input type="hidden" name="org_en_word" value="{{word.id}}" >
+                {% if answer_right %}     
+                {% elif answer_worng %}
+
+                {% else %}
+                <button type="submit">فحص الاجابة</button>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+
+</div>
+<style>
+
+        audio::-webkit-media-controls-current-time-display,
+        audio::-webkit-media-controls-time-remaining-display {
+            display: none;
+        }
+</style>
+<script>
+    check_input = document.querySelectorAll('.form-check-input');
+    namevalue = 1;
+    [...check_input].forEach(element => {
+        element.setAttribute("id", "flexRadioDefault"+namevalue)
+
+        namevalue++;
+    })
+
+    check_label = document.querySelectorAll('.form-check-label');
+    namevalue = 1;
+    [...check_label].forEach(element => {
+        element.setAttribute("for", "flexRadioDefault"+namevalue)
+
+        namevalue++;
+        
+
+    })
+    
+    hidnwords = document.querySelectorAll('.hidnwords');
+    namevalue = 1;
+    [...hidnwords].forEach(element => {
+        element.setAttribute("name", "en_word"+namevalue)
+
+        namevalue++;
+        
+
+    })
+
+    checkbox = 0
+    
+    function change_checkbox() {
+        a_next_en_word = document.querySelectorAll('#a_next_en_word');
+        
+        if(checkbox ==0){
+            checkbox = 1
+        }
+        else{
+            checkbox = 0
+        }
+    }
+
+</script>
+{% endblock body %}

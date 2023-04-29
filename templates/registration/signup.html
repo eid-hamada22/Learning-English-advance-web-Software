@@ -1,0 +1,607 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+
+<link rel="stylesheet" href="{% static 'css/index.css' %}" />
+
+{% endblock css %}
+
+{% block body %}
+<br>
+    {% if step == 1 %}
+        <center><h2>خطط التعليم </h2></center><br>
+        <div  id="pricing-table" >
+        <div class="price-item">
+            <ul>
+                <li class="plan">اساسي</li>
+                <li class="price">
+                <p>مجاني</p>
+            </li>
+            <li class="btn"><a href="{% url 'accounts:signup' plan="free" %}"><button name="plan" >قم بالبدء</button></a></li>
+            <li class="list">اختيار مجموعات للكلمات</li>
+            <li class="list" dir="rtl">+10 مجموعة كلمات افتراضية</li>
+            <li class="list">تشغيل صوتي للكلمات</li>
+            <li class="list"> حتى 4 اجابات اختر</li>
+            <li class="list"> اعلانات</li>
+            </ul>
+        </div>
+        <div class="price-item">
+            <ul>
+        <li class=" plan plus">احترافي</li>
+            <li class="price">
+            <p>₪10<small>/مدى الحياة</small></p>
+            </li>
+            <li class="btn"><a href="{% url 'accounts:signup' plan="pro" %}"><button name="plan"  class="plus">قم بالبدء</button></a></li>
+            <li class="list">انشئ و اختيار مجموعات للكلمات</li>
+            <li class="list" dir="rtl">+50 مجموعة كلمات افتراضية</li>
+            <li class="list">تشغيل صوتي للكلمات والجمل</li>
+            <li class="list">حتى 12 اجابة اختر</li>
+            <li class="list">بدون اعلانات</li>
+            <li class="list">احصائيات مفصلة</li>
+            <li class="list">امكانية تغير المعنى</li>
+            </ul>
+        </div>
+
+    </div>
+
+    {% endif %}
+    {% if step == 2 %}
+        <form class="inf" method="post">
+            {% csrf_token %}
+            <div class="card">
+                {% if username_token == 1%}
+                <h2 class="worngt" >البريد الالكتروني هذا مسجل مسبقاً , <a href="" style="color:#000;">تسجيل الدخول</a></h2>
+                {% elif plan == "free" %}
+                <h2>قم بتعبئة المعلومات الاساسية</h2>
+                {% endif %}
+                <div class="btdas">
+                <label class="input">
+                <input  class="input__field" type="text" value="{% if name_field %}{{name_field}}{% endif %}" name="name" pattern="[A-Za-z ]+" required minlength="3" placeholder=" " />
+                <span class="input__label">الاسم كامل (باللغة الانجليزية)</span>
+                </label>
+
+
+                <label class="input">
+                    <select class="input__field" name="stage" type="text"  required placeholder=" ">
+                        <option value="" selected disabled>اختر</option>
+                        <option value="graduate" >خريج جامعي</option>
+                        <option value="College" >جامعي</option>
+                        <option value="High_school" >المرحلة الثانوية</option>
+                        <option value="middle_School" >المرحلة الاعدادية</option>
+                        <option value="primary_school" >المرحلة الابتدائية</option>
+                    </select>
+                    <span class="input__label">المرحلة التعليميلة</span>
+                </label>
+
+                <label class="input">
+                    <input class="input__field" value="{% if age_field %}{{age_field}}{% endif %}" type="number" name="age" required  placeholder=" " />
+                    <span class="input__label">العمر</span>
+                </label>
+
+                <label class="input">
+                <select class="input__field"  name="gender" required placeholder=" ">
+                    <option value=""  selected disabled>اختر</option>
+                    <option value="male" >ذكر</option>
+                    <option value="female" >انثى</option>
+                </select>
+                <span class="input__label">الجنس</span>
+                </label>
+
+                <label class="input">
+                <input class="input__field" value="{% if phone_field %}{{phone_field}}{% endif %}" name="phone"  type="number" required  placeholder=" " />
+                <span class="input__label">رقم الهاتف</span>
+                </label>
+
+                <label class="input">
+                <input class="input__field {% if username_token == 1 %}worng{% endif %}" value="{% if email_field %}{{email_field}}{% endif %}" type="email" name="email"  required  placeholder=" " />
+                <span class="input__label">البريد الالكتروني</span>
+                </label>
+
+                <label class="input">
+                  <input class="input__field" pattern="[A-Za-z0-9_]{8,15}" value="{% if password_field %}{{password_field}}{% endif %}" type="password" name="password" minlength="8"  required  placeholder=" " title="يجب ان تتكون كلمة المرور من 8 احرف على الاقل"/>
+                  <span class="input__label">كلمة المرور</span>
+                </label>
+
+
+             </div>
+
+            </div>
+        
+            {% comment %} {% if plan == "pro" %}
+                <div class="modal fade" id="model"  tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+                        <div class="modal-dialog ">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">اماكن بيع بطاقة الخطة الاحترافية</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                
+
+
+                                    <div>
+                                    
+                                    <table class="table table-bordered" dir="rtl">
+                            <thead>
+                                <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">الاسم</th>
+                                <th scope="col">العنوان</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                <th scope="row">1</th>
+                                <td>مكتبة الطارق</td>
+                                <td>الجلاء - مفترق الغفري</td>
+
+                                </tr>
+                                <tr>
+                                <th scope="row">2</th>
+                                <td>Tinor</td>
+                                <td>Horton</td>
+
+                                </tr>
+                                <tr>
+                                <th scope="row">3</th>
+                                <td>Mythor</td>
+                                <td>Bully</td>
+
+                                </tr>
+                            </tbody>
+                            </table>
+                            
+                                    </div>
+                            
+                            
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">الغاء</button>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                <div class="card card2" >
+                    <div style="display: flex;
+                    flex-direction: column;
+                    align-items: flex-end;">
+                    <h2 style="margin-right: 10px; text-align: right;">هل لديك كود بطاقة الخطة الاحترافية</h2>
+                    <div class="btdas">
+                    <label class="input">
+                    <input class="input__field" type="text" name="code" id="code" required minlength="10" placeholder=" " />
+                    <span class="input__label">ضع الكود هنا</span>
+                    </label>
+                    <div class="button-group">
+                    <button onclick="code_f()" type="button">فحص</button>
+                    </div>
+                    </div>
+                <h6 href="" class="sell"  data-bs-toggle="modal" data-bs-target="#model">اماكن البيع</h6>
+                <!-- <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#name">اضافة عملية صرف جديدة</button> -->
+                </div>
+                <div class="img" style="margin-left: 100px;">
+                    <img src="{% static 'img/gift_card.png' %}" class="cdimg"  alt="">
+                </div>
+                </div>
+            {% endif %} {% endcomment %}
+            <div class="card">
+                    <div class="button-group">
+                        <input type="hidden" name="plan" value="{{plan}}">
+                        <button style="font-size: 1.4em;" type="submit" value="Signup">تسجيل</button>
+                    </div>
+                    <div class="plsy" >بتسجيلك , فانتا توافق على <a href="">سياسة الخصوصية</a> و <a href="">شروط الاستخدام</a> الخاص بنا</div class="plsy">
+
+                </div>
+            </div>
+        </form>
+
+    {% endif %}
+    {% if step == 3 %}
+        <form class="inf" method="get">
+            {% csrf_token %}
+
+                <div class="modal fade" id="model"  tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+                        <div class="modal-dialog ">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">اماكن بيع بطاقة الخطة الاحترافية</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                
+
+
+                                    <div>
+                                    
+                                    <table class="table table-bordered" dir="rtl">
+                            <thead>
+                                <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">الاسم</th>
+                                <th scope="col">العنوان</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                <th scope="row">1</th>
+                                <td>مكتبة الطارق</td>
+                                <td>الجلاء - مفترق الغفري</td>
+
+                                </tr>
+                                <tr>
+                                <th scope="row">2</th>
+                                <td>Tinor</td>
+                                <td>Horton</td>
+
+                                </tr>
+                                <tr>
+                                <th scope="row">3</th>
+                                <td>Mythor</td>
+                                <td>Bully</td>
+
+                                </tr>
+                            </tbody>
+                            </table>
+                            
+                                    </div>
+                            
+                            
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">الغاء</button>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                <div class="card card2" >
+                    <div style="display: flex;
+                    flex-direction: column;
+                    align-items: flex-end;">
+                    {% if code_rigte == 1 %} 
+                    <h2 style="margin-right: 10px; text-align: right;" class="rightt"><img src="{% static 'img/success.png' %}" class="success_img" /> تم التعرف على البطاقة بنجاح </h2>
+                    {% elif code_notrigte == 1%}
+                    <h2 style="margin-right: 10px; text-align: right;" class="worngt"><img src="{% static 'img/declined.png' %}" class="success_img" />الرمز الذي ادخلته غير موجود او مستخدم بالفعل</h2>
+
+                    {% else %}
+                    <h2 style="margin-right: 10px; text-align: right;">هل لديك كود بطاقة الخطة الاحترافية</h2>
+
+                    {% endif %}
+                    <div class="btdas">
+                    <label class="input">
+                    <input class="input__field {% if code_rigte == 1 %}right {% elif code_notrigte == 1%}worng{% endif %}" type="number"  value="{{ request.GET.code }}" name="code" id="code" required minlength="8" placeholder=" " />
+                    <span class="input__label">ضع الكود هنا</span>
+                    </label>
+                    <div class="button-group">
+                    <button  type="submit" >فحص</button>
+                    </div>
+                    </div>
+                <h6 href="" class="sell"  data-bs-toggle="modal" data-bs-target="#model">اماكن البيع</h6>
+                 <a type="button" class="btn btn-primary btn" >ليس لديك , اكمل على الخطة المجانية</a> 
+                </div>
+                <div class="img" style="margin-left: 100px;">
+                    <img src="{% static 'img/gift_card.png' %}" class="cdimg"  alt="">
+                </div>
+                </div>
+        </form>
+        {% if code_rigte == 1 %}
+            <form class="inf" method="post">
+                {% csrf_token %}
+                <div class="card">
+                    <h4 style="margin-right: 10px; text-align: right;">{{user.email}} تم التعرف على البطاقة بنجاح , تفعيلها لحسابك  </h4>
+                    <div class="button-group">
+                        <input type="hidden" name="code" value="{{request.GET.code}}">
+                        <button style="font-size: 1.4em;" type="submit" value="Signup">تفعيل البطاقة</button>
+                    </div>
+                    <div class="plsy" >بتسجيلك , فانتا توافق على <a href="">سياسة الخصوصية</a> و <a href="">شروط الاستخدام</a> الخاص بنا</div class="plsy">
+
+                    </div>
+                </div>
+            </form>
+        {% endif %}
+    {% endif %}
+    <style>
+        *{
+            margin:0; 
+            padding:0;
+        }
+        body{
+            background-color:#eef;
+        }
+        .success_img{
+            width:30px;
+            color: #198754 !important;
+        }
+        input.worng{
+			border-color: #ff2d26 !important;
+		}
+        input.right{
+            border-color: #198754 !important;
+        }
+		.rightt{
+			color: #198754 !important;
+		}
+		.worngt{
+			color: #ff2d26 !important;
+		}
+        #pricing-table{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #pricing-table .price-item{
+            background-color:#fff; 
+            display: flex;
+            align-items: centinput__fielder;
+            flex-direction: column;
+            
+            width: 350px; 
+            border-radius:10px;
+            transition:all .3s ease-in-out;
+        }
+        #pricing-table .price-item:nth-of-type(1),
+        #pricing-table .price-item:nth-of-type(3){
+        margin-top:3%;
+        }
+        #pricing-table .price-item:nth-of-type(2),
+        #pricing-table .price-item:nth-of-type(3){
+            margin-left:1%
+        }
+        #pricing-table .price-item ul{
+            list-style:none;
+            transition: all .5s ease-in-out;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+        #pricing-table .price-item:hover{
+            margin-top:-10px; 
+        }
+        #pricing-table .price-item ul li.plan {
+            padding:15px;
+            font-size:18px;
+            width: 100%;
+            font-weight:bold; 
+            background:#007bff;
+            color:#fff; 
+            border-top-left-radius:10px; 
+            
+        }
+        #pricing-table .price-item ul li.plus{
+            background:#dc3545;
+        }
+        #pricing-table .price-item ul li.price{
+            padding:5px;
+        }
+        #pricing-table .price-item ul li.price p{ 
+        font-weight:bold;
+            font-size:35px; 
+            color:#414141 !important; 
+        }
+        #pricing-table .price-item ul li.price p small{
+            font-size:20px; 
+            color:#6D6E70;
+            font-weight:normal; 
+        }
+        #pricing-table .price-item ul li.price span{
+            display:block;
+        }
+        #pricing-table .price-item ul li.price .price-dollar{
+            color:#6D6E70; 
+            margin-top:6%;
+            font-weight:bold;
+            text-decoration:line-through; 
+        }
+        #pricing-table .price-item ul li.price .discount{
+            margin-top:6%; 
+            font-weight:normal; 
+            color:#0230fa; 
+        }
+        #pricing-table .price-item ul li.price .plus{
+            color:#fa0230; 
+        }   
+        #pricing-table .price-item ul li.btn{.btdas
+            /* margin:24px 0; */
+        }
+        #pricing-table .price-item ul li.btn button{
+            padding:10px 32px; 
+            font-size:18px;
+            font-weight:bold; 
+            color:#fff; 
+            background-color:#007bff; 
+            border:none; 
+            cursor:pointer;
+            transition:all .3s ease-in-out;
+            border-radius:10px; 
+        }
+        #pricing-table .price-item ul li.btn button:hover{
+            background: #1169D9;
+        }
+        #pricing-table .price-item ul li.btn button.plus {
+            background: #dc3545;
+        }
+        #pricing-table .price-item ul li.btn button.plus:hover{
+            background:#C82233; 
+        }
+        #pricing-table .price-item ul li.list{ 
+            font-weight:bold;
+            padding:10px;
+            border-bottom:1px solid #f2f2f2; 
+            color: #000;
+        }
+        @media screen and (max-width: 767px) {
+            #pricing-table {
+                flex-direction: column-reverse;
+            }
+        }
+
+        @import url("https://rsms.me/inter/inter.css");
+
+        .form-check.form-switch{
+          display: flex;
+          align-items: center;
+          flex-direction: row;
+          font-size: 1.1em;
+          text-align: right;
+          padding-left: 0em;
+          width: 100%;
+          justify-content: flex-end;
+        }
+        .form-check-label{
+          margin-right: 50px;
+          width: 100%;
+        }
+
+        .inf{
+            width: 100%;
+            display: flex;
+            flex-direction:column;
+            justify-content: center;
+            align-items: center;
+        }
+        .card {
+        background: white;
+        padding: calc(4 * 0.5rem);
+        margin-top: calc(4 * 0.5rem);
+        border-radius: 4px;
+        border: 3px solid var(#fab700, currentColor);
+        box-shadow: 0.5rem 0.5rem 0 var(#fab700, currentColor);
+        width: 90%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        }
+        .cdimg{
+            width: 350px;
+        }
+        .card2{
+            align-items: center;
+            flex-direction: row-reverse;
+            justify-content: space-between;
+        }
+        @media screen and (max-width: 767px) {
+            .card2{
+                flex-direction: column;
+            }
+            .img{
+                margin-left: 0 !important;
+                margin-top: 10px;
+            }
+            .cdimg{
+            width: 280px;
+            }
+        }
+        .btdas{
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+
+        }
+        .card--inverted {
+        --color-background: #212121;
+        color: white;
+        }
+        .card--accent {
+        --color-background: rgb(56, 102, 223);
+        --color-accent: white;
+        color: #212121;
+        }
+        .card *:first-child {
+        margin-top: 0;
+        }
+        .l-design-widht {
+        max-width: 40rem;
+        padding: 1rem;
+        }
+        .input {
+        position: relative;
+        margin: 10px;
+        }
+        .input__label {
+        position: absolute;
+        right: 0;
+        top: 0;
+        padding: calc(0.5rem * 0.75) calc(0.5rem * 0.5);
+        margin: calc(0.5rem * 0.75 + 3px) calc(0.5rem * 0.5);
+        background: pink;
+        white-space: nowrap;
+        transform: translate(0, 0);
+        transform-origin: 0 0;
+        background: white;
+        transition: transform 120ms ease-in;
+        font-weight: bold;
+        line-height: 1.2;
+        }
+        .input__field {
+        box-sizing: border-box;
+        display: block;
+        width: 300px;
+        border: 3px solid currentColor;
+        padding: calc(0.5rem * 1.5) 0.5rem;
+        color: currentColor;
+        background: transparent;
+        border-radius: 4px;
+        direction: rtl;
+        text-align: right;
+        transition: 0.5s;
+        }
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+        }
+        .input__field:focus + .input__label, .input__field:not(:placeholder-shown) + .input__label {
+        transform: translate(0.25rem, -65%) scale(0.8);
+        color: rgb(56, 102, 223);
+        }
+        .button-group {
+        margin-right: calc(0.7rem );
+        color: #fff;
+        }
+
+        .sell{
+            text-decoration: underline;
+            color: #6c757d;
+            margin-right: 10px;
+        }
+        .plsy{
+            font-size: 1.3em;
+            color: #000;
+            text-align: right;
+        }
+        .plsy a{
+            color: #000;
+            text-decoration: underline;
+        }
+        .hidden {
+        display: none;
+        }
+
+    </style>
+    <script type="text/javascript">
+
+      function transform(x, y) {
+        document.getElementById('code').style.transform = 'translate(' + x + 'px ,  ' + y + 'px)'
+        }
+
+
+            console.log("fasfsaffsf")
+            for(var i = 0; i < 6; i++){
+                setTimeout(transform, 100 * i, (i%2*2-1)*20, 0)
+            }
+            setTimeout(transform, 100 * i,0, 0)
+
+            document.getElementById('code').style.transform = 'translate(' + 0 + 'px ,  ' + 0 + 'px)'
+
+
+
+
+  </script>
+{% endblock body %}

@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+
+<link rel="stylesheet" href="{% static 'css/word_group.css' %}" />
+
+{% endblock css %}
+
+{% block body %}
+    <div class="body">
+        <div class="pathup">
+            <a href="{% url 'pages:learning' %}" class="up_a">العودة لصفحة المجموعات <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+
+            <div class="path"></div>
+            <div class="tet">
+                
+                    <div class="img"><img src="{{group.img.url}}" width="100px" alt=""></div>
+
+                <div class="det" dir="rtl">
+                    <div class="name">{{group.en_name}} - {{group.ar_name}}</div>
+
+                    {% if allpass %}<img src="{% static 'img/success.png' %}" class="success_img" /> <span style="color: #198754;">مكتملة</span>{% endif %}
+
+                    <div class="th2" dir="">{{words_from_same_group_notpass_len}}/{{group_words_len}} كلمة </div>
+                </div>
+            </div>
+            <div class="btndiv">
+                <div class="button-group">
+                    {% if allpass %}
+                    <button style="font-size: 1.4em;opacity:0.7;background: #198754;" disabled > لقد اكملت هذه المجموعة </button>
+                    {% else %}
+                        <a href="{% url 'pages:word' group.en_name next_word %}"><button style="font-size: 1.4em;" type="submit" value="Signup">اكمال التلعلم </button></a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <form method="get" class="card card1">
+            <!-- {% csrf_token %} -->
+            <h2 dir="rtl">كلمات المجموعة الغير متجاوزة: </h2>
+            <div class="words">
+                {% for word in words_from_same_group_notpass %}
+                    <div class="word"><label for="{{word}}" style="font-size: 1.3em;">{{word}}</label><input type="checkbox" name="{{word}}" id="{{word}}" value="{{word.id}}" class="check1"   onchange="chk1()"></div>
+                
+                {% endfor %}
+            </div>
+            <div class="center">
+                <div class="button-group blocker">
+                    {% if allpass %}
+                    <button style="font-size: 1.4em;opacity:0.7;background: #198754;" disabled > كل الكلمات متجاوزة </button>
+                    {% else %}
+                    <button style="font-size: 1.4em;" type="submit"  id="btncheck1">تجاوز الكلمات المحددة</button>
+                    {% endif %}
+                </div>
+            </div>
+        </form>
+
+        <form method="post" class="card card2">
+            {% csrf_token %}
+            <h2 dir="rtl">كلمات المجموعة  المتجاوزة: </h2>
+            <div class="words">
+                
+                {% for word in words_from_same_group_passed %}
+                <div class="word">
+                    <label for="{{word}}" style="font-size: 1.3em;">{{word}}</label><input type="checkbox" name="{{word}}" id="{{word}}" value="{{word.id}}"  class="check2" onchange="chk2()"></div>
+                {% endfor %}
+            </div>
+            <div class="center">
+                <div class="button-group blocker">
+                    <button style="font-size: 1.4em;" type="submit" value="Signup" id="btncheck2">الغاء تجاوز الكلمات المحددة </button>
+                </div>
+            </div>
+        </form>
+
+
+
+        <!-- <form method="post" class="card card2">
+            <h2 dir="rtl">كلمات المجموعة  ومعانيه العربية: </h2>
+            <div class="words">
+                {% for word in all_group_words %}
+                <div class="modal fade" id="modelforword{{word.id}}" tabindex="10"   aria-hidden="true">
+                    <form method="GET" >
+                        <div class="modal-dialog ">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">{{word}}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    
+                                    <div style="float: right;">: الكلمة </div>
+                                    <div class="form-group">
+                                        <input type="text" disabled required dir="rtl" class="form-control" value="{{word}}" name="en_word"   style="float: right;">
+                                        <input type="hidden"  required dir="rtl" class="form-control" value="{{word}}" name="en_word"   style="float: right;">
+                                    </div>
+                
+                                    <div style="float: right;">: المعنى العربي الحالي</div>
+                                    <div class="form-group">
+                                        <input type="text" disabled required dir="rtl" class="form-control" value="{{word.ar_word}}" name="ar_word"   style="float: right;">
+                                        <input type="hidden"  required dir="rtl" class="form-control" value="{{word.ar_word}}" name="ar_word"   style="float: right;">
+                                    </div>
+
+                                    <div style="float: right;">: تغير المعنى الى</div>
+                                    <div class="form-group">
+                                        <input type="text"  required dir="rtl" class="form-control" placeholder="المعنى الجديد" name="new_ar_word"    style="float: right;">
+                                    </div>
+                                    <br>
+                                    <div class="form-group word" style="padding: 10px;">
+                                        <input type="checkbox"   dir="rtl"  name="for_all_groups"    style="float: right;">التغير في كل المجموعات
+                                    </div>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">الغاء</button>
+                                    <button type="submit" class="btn btn-primary" name="change_menaing">طباعة</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="word"><h2>{{word}}</h2><h2>{{word.ar_word}}</h2><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modelforword{{word.id}}">تعديل</button></div>
+
+                {% endfor %}
+
+            </div>
+        </form> -->
+
+        <br>
+        <div class="center"><h2>احصائيات مفصلة</h2></div>
+        <div class="center"><h6>الاحصائيات المفصلة متوفرة للخطة الاحترافية فقط</h6></div>
+        <div  class="card card2 {% if professional_user == 0 %}blur{% endif %}  " style="margin-top: 25px;" >
+            
+            <h2 dir="rtl">اكثر الكلمات تكررت اخطائها: </h2>
+            <div class="words">
+                <span class="word sml"><h2>الكملة</h2><span>عدد المرات التي اخطئت اجابتها</span></span>
+
+                {% for word in word_and_worng_answer %}
+                    {% if word.1 %}
+                        <div class="word redb"><h2>{{word.0}}</h2><span>{{word.1}}</span></div>
+                    {% endif %}
+                {% endfor %}
+
+            </div>
+            <h2 dir="rtl">كلمات اجتزتها من اول مرة: </h2>
+            <div class="words">
+                {% for word in word_answer_f %}
+                        <div class="word grennb"><h2>{{word}}</h2> </div>
+                {% endfor %}
+            </div>
+
+            <br>
+            <div class="space-around"><h4 dir="rtl">متوسط صحة الاجابة: {{right_answer_rate|floatformat:1}}%</h4><h4 dir="rtl"> عدد الاسئلة المجابة/عدد الاجابات الصحيحة : {{worng_group_answer_len}}/{{all_group_answers_len}}</h4></div>
+        
+        </div>
+
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <style>
+        .modal-backdrop.show{
+            display:none;
+        }
+    </style>
+
+    <script>
+        chk1()
+        btn1_isChecked = 0
+        document.getElementById('btncheck1').style.opacity = '0.5'
+        document.getElementById("btncheck1").disabled = true;
+        function chk1(){
+             btn1_isChecked = $("input[type=checkbox].check1").is(":checked");
+             if(btn1_isChecked){
+                document.getElementById('btncheck1').style.opacity = '1'
+                document.getElementById("btncheck1").disabled = false;
+             }
+             else{
+                document.getElementById('btncheck1').style.opacity = '0.5'
+                document.getElementById("btncheck1").disabled = true;
+
+             }
+        }
+
+        chk2()
+        btn2_isChecked = 0
+        document.getElementById('btncheck2').style.opacity = '0.5'
+        document.getElementById("btncheck2").disabled = true;
+        function chk2(){
+             btn2_isChecked = $("input[type=checkbox].check2").is(":checked");
+             if(btn2_isChecked){
+                document.getElementById('btncheck2').style.opacity = '1'
+                document.getElementById("btncheck2").disabled = false;
+             }
+             else{
+                document.getElementById('btncheck2').style.opacity = '0.5'
+                document.getElementById("btncheck2").disabled = true;
+
+             }
+        }
+    </script>
+{% endblock body %}
+

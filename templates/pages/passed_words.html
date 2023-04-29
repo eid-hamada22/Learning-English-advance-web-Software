@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+
+<link rel="stylesheet" href="{% static 'css/word_group.css' %}" />
+
+{% endblock css %}
+
+{% block body %}
+    <div class="body">
+        <div class="pathup">
+            <a href="{% url 'pages:learning' %}" class="up_a">العودة لصفحة المجموعات <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+
+            <div class="path"></div>
+            <div class="tet">
+                
+                    <div class="img"><img src="{% static 'img/success.png' %}" width="100px" alt=""></div>
+
+                <div class="det" dir="rtl">
+                    <div class="name">Passed words - الكلمات المتجاوزة</div>
+
+
+                    <div class="th2" dir="">100 كلمة </div>
+                </div>
+            </div>
+
+        </div>
+        <form method="get" class="card card1">
+            <!-- {% csrf_token %} -->
+            <h2 dir="rtl">الكلمات المتجاوزة :  </h2>
+            <div class="words" dir="ltr">
+                {% for passed_word in passed_words %}
+                    <div class="word">
+                        <label for="{{passed_word.word}}" style="font-size: 1.3em;">{{passed_word.word}}</label>
+                        <a style="color:#000;" href="{% url 'pages:word_group' passed_word.group %}"><span for="{{passed_word.word}}" style="font-size: 1.3em;">{{passed_word.group}}</span></a>
+                    </div>
+        
+                {% endfor %}
+                <span class="word sml"><h2>الكملة</h2><span>المجموعة</span></span>
+                
+            </div>
+
+        </form>
+        <br>
+        <br>
+        <div class="center"><h2>احصائيات مفصلة</h2></div>
+        <div class="center"><h6>الاحصائيات المفصلة متوفرة للخطة الاحترافية فقط</h6></div>
+        <div  class="card card2 {% if professional_user == 0 %}blur{% endif %}  " style="margin-top: 25px;" >
+            
+            <h2 dir="rtl">اكثر الكلمات تكررت اخطائها: </h2>
+            <div class="words">
+                <span class="word sml"><h2>الكملة</h2><span>عدد المرات التي اخطئت اجابتها</span></span>
+
+                {% for word in word_and_worng_answer %}
+                    {% if word.1 %}
+                        <div class="word redb"><h2>{{word.0}}</h2><span>{{word.1}}</span></div>
+                    {% endif %}
+                {% endfor %}
+
+            </div>
+            <h2 dir="rtl">كلمات اجتزتها من اول مرة: </h2>
+            <div class="words">
+                {% for word in word_answer_f %}
+                        <div class="word grennb"><h2>{{word}}</h2> </div>
+                {% endfor %}
+            </div>
+
+            <br>
+            <div class="space-around"><h4 dir="rtl">متوسط صحة الاجابة: {{right_answer_rate|floatformat:1}}%</h4><h4 dir="rtl"> عدد الاسئلة المجابة/عدد الاجابات الصحيحة : {{worng_group_answer_len}}/{{all_group_answers_len}}</h4></div>
+        
+        </div>
+{% endblock body %}
