@@ -27,13 +27,13 @@ The page responsible for adding words can be accessed by admin only
 ![التقاط الويب_29-4-2023_145158_127 0 0 1](https://user-images.githubusercontent.com/90055804/235303410-1cb6d45e-a451-4aa8-84ad-19c418950d34.jpeg)
 
 #### How it works :
--First: The admin enters the word in English
--Second: The word is translated into Arabic via the googletrans library.
--Third: An audio pronunciation of the word is created and stored in an mp3 file using the gTTS library.
--Fourth: Several sentences including the English word are fetched from websites that provide this service using web scraping technology (the program is for personal use only) through the requests library and the beautifulsoup4 library.
--Fifth: Those sentences are translated into Arabic via the googletrans library and converted into an audio file using the gTTS library.
--Sixth: The administrator determines the groups of words in which the word will be present, such as the group of words of countries or animals ..., the group of all and the group of the first letter of the word are automatically determined.
--Finally: all that information and data get stored in the database, the process takes between 4-10s.
+  - First: The admin enters the word in English.
+  - Second: The word is translated into Arabic via the googletrans library.
+  - Third: An audio pronunciation of the word is created and stored in an mp3 file using the gTTS library.
+  - Fourth: Several sentences including the English word are fetched from websites that provide this service using web scraping technology (the program is for personal use only) through the requests library and the beautifulsoup4 library.
+  - Fifth: Those sentences are translated into Arabic via the googletrans library and converted into an audio file using the gTTS library.
+  - Sixth: The administrator determines the groups of words in which the word will be present, such as the group of words of countries or animals ..., the group of all and the group of the first letter of the word are automatically determined.
+  - Finally: all that information and data get stored in the database, the process takes between 4-10s.
 
 ### Login "/login"
 Login page
